@@ -144,6 +144,22 @@ function MeasurementToolsDropdown() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  // Handle click position detection - Option 1 implementation
+  const handleButtonClick = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const buttonWidth = rect.width;
+
+    // Right 25% of button opens dropdown, left 75% activates tool
+    if (clickX > buttonWidth * 0.75) {
+      // Right corner - open dropdown
+      handleDropdownToggle(e);
+    } else {
+      // Main area - activate tool
+      handlePrimaryClick();
+    }
+  };
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -165,16 +181,16 @@ function MeasurementToolsDropdown() {
 
   return (
     <div className="relative">
-      {/* Primary Tool Button with Dropdown Arrow */}
+      {/* Smart Click Detection Button */}
       <div
         ref={triggerRef}
-        className="flex items-center"
+        className="relative"
       >
-        {/* Main Tool Button */}
         <ToolButton
-          onClick={handlePrimaryClick}
-          title={activeTool.tooltip}
+          onClick={handleButtonClick}
+          title={`${activeTool.tooltip} • Click right edge for more tools`}
           active={isToolReallyActive}
+          className="relative"
         >
           {activeTool.customIcon ? (
             <img
@@ -188,26 +204,22 @@ function MeasurementToolsDropdown() {
               className="h-6 w-6 text-white"
             />
           )}
-        </ToolButton>
 
-        {/* Dropdown Arrow */}
-        <button
-          onClick={handleDropdownToggle}
-          className="ml-1 flex h-3 w-3 items-center justify-center text-white/60 transition-colors hover:text-white"
-          title="More measurement tools"
-        >
-          <svg
-            className={`h-2 w-2 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
+          {/* Subtle visual hint for dropdown area */}
+          <div className="absolute bottom-0 right-0 h-1.5 w-1.5 opacity-30">
+            <svg
+              className={`h-1.5 w-1.5 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        </ToolButton>
       </div>
 
       {/* Portal-based Dropdown Menu */}

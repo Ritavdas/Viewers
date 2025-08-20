@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 /**
  * ToolButton - Individual tool button with placeholder icon
- * 
+ *
  * This component provides the exact button styling from Figma design:
  * - Size: 24x24px
  * - White icons/content
@@ -19,43 +19,38 @@ interface ToolButtonProps {
   active?: boolean;
 }
 
-function ToolButton({ 
-  children, 
-  onClick, 
-  className, 
-  title,
-  active = false 
-}: ToolButtonProps) {
+function ToolButton({ children, onClick, className, title, active = false }: ToolButtonProps) {
   return (
     <button
       className={classNames(
         // Base styling from Figma - 24x24px
-        'w-6 h-6',  // 24px x 24px from Figma
+        'h-6 w-6', // 24px x 24px from Figma
         'flex items-center justify-center',
-        
+
         // Icon styling
         'text-white',
-        
+
         // Interaction states
         'cursor-pointer',
         'transition-all duration-200',
         'hover:scale-110',
         'hover:text-white/80',
         'active:scale-95',
-        
+
         // Active state with glass morphism effect
         active && [
-          'text-blue-400',
-          'bg-blue-500/20',
-          'border border-blue-400/30',
+          'text-blue-300',
+          'bg-blue-500/40',
+          'border-2 border-blue-300/60',
           'rounded-md',
-          'shadow-lg',
-          'backdrop-blur-sm'
+          'shadow-xl',
+          'backdrop-blur-sm',
+          'ring-2 ring-blue-400/20',
         ],
-        
+
         // Remove default button styles
-        'bg-transparent border-none p-0 outline-none',
-        
+        'border-none bg-transparent p-0 outline-none',
+
         className
       )}
       onClick={onClick}
