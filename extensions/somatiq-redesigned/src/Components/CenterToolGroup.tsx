@@ -44,6 +44,37 @@ function CenterToolGroup() {
     console.log(`Tool ${toolNumber} clicked`);
   };
 
+  // Tool functionality handlers for tools 7-12
+  const handleChangeLayout = () => {
+    // Layout selector - this might need special handling as it's ohif.layoutSelector
+    console.log('Change Layout clicked - may need special implementation');
+  };
+
+  const handleImageSliceSync = () => {
+    commandsManager.run({
+      commandName: 'toggleSynchronizer',
+      commandOptions: {
+        type: 'imageSlice',
+      },
+    });
+  };
+
+  const handleInvert = () => {
+    commandsManager.run('invertViewport');
+  };
+
+  const handleAngleTool = () => {
+    commandsManager.run(setToolActiveToolbar, { toolName: 'Angle' });
+  };
+
+  const handleThreeDTool = () => {
+    commandsManager.run(setToolActiveToolbar, { toolName: 'TrackballRotate' });
+  };
+
+  const handleDicomTagBrowser = () => {
+    commandsManager.run('openDICOMTagViewer');
+  };
+
   // OHIF tool command configurations
   const setToolActiveToolbar = {
     commandName: 'setToolActiveToolbar',
@@ -132,7 +163,7 @@ function CenterToolGroup() {
 
       {/* Tool 6 - Change Layout */}
       <ToolButton
-        onClick={() => handleToolClick(7)}
+        onClick={handleChangeLayout}
         title="Change Layout"
       >
         <img
@@ -157,7 +188,7 @@ function CenterToolGroup() {
 
       {/* Tool 8 - Image Slice Sync */}
       <ToolButton
-        onClick={() => handleToolClick(8)}
+        onClick={handleImageSliceSync}
         title="Image Slice Sync"
       >
         <img
@@ -169,7 +200,7 @@ function CenterToolGroup() {
 
       {/* Tool 9 - Invert */}
       <ToolButton
-        onClick={() => handleToolClick(9)}
+        onClick={handleInvert}
         title="Invert Colors"
       >
         <img
@@ -181,8 +212,9 @@ function CenterToolGroup() {
 
       {/* Tool 10 - Angle */}
       <ToolButton
-        onClick={() => handleToolClick(10)}
+        onClick={handleAngleTool}
         title="Angle Tool"
+        active={isToolActive('Angle')}
       >
         <img
           src={angleIcon}
@@ -193,8 +225,9 @@ function CenterToolGroup() {
 
       {/* Tool 11 - 3D */}
       <ToolButton
-        onClick={() => handleToolClick(11)}
+        onClick={handleThreeDTool}
         title="3D View"
+        active={isToolActive('TrackballRotate')}
       >
         <img
           src={threeDIcon}
@@ -205,7 +238,7 @@ function CenterToolGroup() {
 
       {/* Tool 12 - DICOM Tag Browser */}
       <ToolButton
-        onClick={() => handleToolClick(12)}
+        onClick={handleDicomTagBrowser}
         title="DICOM Tag Browser"
       >
         <img
