@@ -1,10 +1,222 @@
+# Somatiq Redesigned Extension
+
+This project includes a custom OHIF extension with Somatiq branding and redesigned UI components, implemented as a separate extension to maintain compatibility with the core OHIF system.
+
+### Custom Implementation Overview
+
+The Somatiq redesigned interface has been implemented as a self-contained extension located at:
+
+```
+extensions/somatiq-redesigned/
+```
+
+This approach ensures:
+
+- **Non-invasive integration**: Core OHIF files remain untouched
+- **Easy maintenance**: All customizations are contained in one extension
+- **Version compatibility**: Updates to OHIF core won't break custom features
+- **Modular design**: Can be easily enabled/disabled or deployed separately
+
+### Key Components & Architecture
+
+#### Project Structure
+
+- **Worklist**: Main page (`Viewers/platform/app/src/routes/WorkList/WorkList.tsx`)
+- **StudyListTable**: List of rows with study data
+- **expandedContent**: Contains detailed row content and action buttons
+- **tableDataSource**: Data management for the worklist table
+- **Main viewer mode**: `Viewers/modes/longitudinal/src/index.ts`
+- **Viewer layout**: `Viewers/extensions/default/src/ViewerLayout/index.tsx`
+
+#### Custom UI Components
+
+**1. CenterToolGroup** (`src/Components/CenterToolGroup.tsx`)
+
+- 12-tool horizontal toolbar with Somatiq branding
+- Custom icons for all tools (zoom, pan, measurement tools, etc.)
+- OHIF command integration for full functionality
+- Glass morphism styling with backdrop blur effects
+
+**2. MeasurementToolsDropdown** (`src/Components/MeasurementToolsDropdown.tsx`)
+
+- Smart dropdown with click position detection
+- Dynamic primary tool switching based on active measurement tool
+- Portal-based rendering for proper z-index management
+- 9 measurement tools: Length, Bidirectional, Arrow Annotate, Ellipse ROI, Rectangle ROI, Circle ROI, Freehand ROI, Spline ROI, Livewire
+- Custom rectangle indicator for dropdown trigger
+
+**3. LayoutDropdown** (`src/Components/LayoutDropdown.tsx`)
+
+- Full OHIF LayoutSelector functionality with custom Somatiq icon
+- Common presets (1x1, 1x2, 2x2, 3x1 layouts)
+- Advanced presets (MPR, 3D views, hanging protocols)
+- Interactive 3x4 grid selector for custom layouts
+- Handles both `setViewportGridLayout` and `setHangingProtocol` commands
+
+**4. ToolButton** (`src/Components/ToolButton.tsx`)
+
+- Base button component with Figma design specifications
+- 24x24px sizing with hover and active states
+- Glass morphism active state with blue accent colors
+- Smooth transitions and scale effects
+
+**5. ToolGroup** (`src/Components/ToolGroup.tsx`)
+
+- Container component for horizontal tool arrangement
+- Flexbox layout with proper spacing and alignment
+
+### Technical Implementation Details
+
+#### Icon Integration
+
+- All custom icons stored in `assets/` directory
+- PNG format for consistent rendering across different displays
+- Proper alt text and accessibility considerations
+- Dynamic icon switching for measurement tools based on active state
+
+#### OHIF Integration
+
+- Uses OHIF's `useSystem` and `useToolbar` hooks for state management
+- Proper command integration via `commandsManager.run()`
+- Toolbar section management ('primary' vs 'MeasurementTools')
+- Full compatibility with OHIF's tool lifecycle and evaluation system
+
+#### Styling Approach
+
+- **Glass morphism design**: Backdrop blur effects, semi-transparent backgrounds
+- **Consistent spacing**: 4px gaps between tools as per Figma specifications  
+- **Hover effects**: Scale transforms and opacity changes for visual feedback
+- **Active states**: Blue accent colors with border and shadow effects
+- **Responsive design**: Proper sizing and alignment across different screen sizes
+
+#### State Management
+
+- Real-time tool state detection using OHIF toolbar services
+- Dynamic UI updates based on active measurement tools
+- Proper cleanup and event handling for dropdown interactions
+- Portal-based rendering for complex dropdowns to avoid z-index conflicts
+
+### Features Implemented
+
+1. **Smart Measurement Tool Dropdown**
+   - Primary tool icon changes based on active measurement tool
+   - Click position detection (left 75% activates tool, right 25% opens dropdown)
+   - Portal-based dropdown with all 9 measurement tools
+   - Proper active state indicators
+
+2. **Full Layout Selector**
+   - Custom trigger with Somatiq change layout icon
+   - Complete OHIF LayoutSelector functionality
+   - Common and advanced preset options
+   - Interactive grid selector for custom layouts
+
+3. **Complete Tool Integration**
+   - All 12 tools with proper OHIF command integration
+   - Zoom, Pan, Window Level, Capture, Flip Horizontal tools
+   - Image Slice Sync, Invert, Angle, 3D, DICOM Tag Browser
+   - Proper active state detection and visual feedback
+
+4. **Custom Styling System**
+   - Glass morphism effects throughout
+   - Consistent color scheme with blue accents
+   - Smooth animations and transitions
+   - Professional medical imaging interface appearance
+
+### Getting Started with Somatiq Redesigned Extension
+
+#### Prerequisites
+
+- [Node.js 18+](https://nodejs.org/en/)
+- [Yarn 1.20.0+](https://yarnpkg.com/en/docs/install)
+- Yarn Workspaces enabled: `yarn config set workspaces-experimental true`
+
+#### Quick Start
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/Viewers.git
+   cd Viewers
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   # Enable Yarn Workspaces (if not already done)
+   yarn config set workspaces-experimental true
+   
+   # Install all dependencies
+   yarn install
+   ```
+
+3. **Start development server**
+
+   ```bash
+   # Standard development mode
+   yarn dev
+   
+   # Or use fast development mode (experimental)
+   yarn dev:fast
+   ```
+
+4. **Access the application**
+   - Open your browser to `http://localhost:3000`
+   - The Somatiq redesigned extension will be automatically loaded
+   - Custom toolbar with Somatiq branding will replace the default OHIF toolbar
+
+#### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `yarn dev` | Start development server with hot reload |
+| `yarn dev:fast` | Experimental fast development mode using rsbuild |
+| `yarn build` | Build production version |
+| `yarn test:unit` | Run unit tests |
+
+#### Development Workflow
+
+1. **Making Changes to Somatiq Components**
+   - All custom components are in `extensions/somatiq-redesigned/src/Components/`
+   - Changes are automatically reflected with hot reload
+   - No need to restart the development server
+
+2. **Adding New Icons**
+   - Place new PNG icons in `extensions/somatiq-redesigned/assets/`
+   - Import them in the respective component files
+   - Follow the existing naming convention
+
+3. **Modifying Tool Functionality**
+   - Tool behaviors are defined in `CenterToolGroup.tsx`
+   - Use OHIF's `commandsManager.run()` for tool actions
+   - Refer to existing implementations for patterns
+
+### Installation & Usage
+
+The Somatiq redesigned extension is automatically loaded when running the OHIF viewer. The custom toolbar components replace the default OHIF toolbar while maintaining full functionality and compatibility with the core system.
+
+**Key Development Files:**
+
+```
+extensions/somatiq-redesigned/src/
+├── Components/
+│   ├── CenterToolGroup.tsx      # Main toolbar with 12 tools
+│   ├── MeasurementToolsDropdown.tsx  # Smart measurement dropdown
+│   ├── LayoutDropdown.tsx       # Layout selector with custom icon
+│   ├── ToolButton.tsx           # Base button component
+│   └── ToolGroup.tsx            # Container component
+├── assets/                      # Custom Somatiq icons (PNG format)
+└── index.tsx                    # Extension entry point
+```
+
+This modular approach ensures that customizations remain separate from core OHIF functionality and can be easily maintained or updated independently.
+
+---
 <!-- prettier-ignore-start -->
 <div align="center">
   <h1>OHIF Medical Imaging Viewer</h1>
   <p><strong>The OHIF Viewer</strong> is a zero-footprint medical image viewer
 provided by the <a href="https://ohif.org/">Open Health Imaging Foundation (OHIF)</a>. It is a configurable and extensible progressive web application with out-of-the-box support for image archives which support <a href="https://www.dicomstandard.org/using/dicomweb/">DICOMweb</a>.</p>
 </div>
-
 
 <div align="center">
   <a href="https://docs.ohif.org/"><strong>Read The Docs</strong></a>
@@ -20,8 +232,6 @@ provided by the <a href="https://ohif.org/">Open Health Imaging Foundation (OHIF
   📰 <a href="https://ohif.org/news/"><strong>Join OHIF Newsletter</strong></a> 📰
 </div>
 
-
-
 <hr />
 
 [![NPM version][npm-version-image]][npm-url]
@@ -36,7 +246,6 @@ provided by the <a href="https://ohif.org/">Open Health Imaging Foundation (OHIF
 <!-- [![codecov][codecov-image]][codecov-url] -->
 <!-- [![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors) -->
 <!-- prettier-ignore-end -->
-
 
 |     |  | |
 | :-: | :---  | :--- |
@@ -104,7 +313,6 @@ For commercial support, academic collaborations, and answers to common
 questions; please use [Get Support](https://ohif.org/get-support/) to contact
 us.
 
-
 ## Developing
 
 ### Branches
@@ -118,6 +326,7 @@ This is typically where the latest development happens. Code that is in the mast
 Each package is tagged with beta version numbers, and published to npm such as `@ohif/ui@3.6.0-beta.1`
 
 ### `release/*` branches - The latest stable releases
+
 Once the `master` branch code reaches a stable, release-ready state, we conduct a comprehensive code review and QA testing. Upon approval, we create a new release branch from `master`. These branches represent the latest stable version considered ready for production.
 
 For example, `release/3.5` is the branch for version 3.5.0, and `release/3.6` is for version 3.6.0. After each release, we wait a few days to ensure no critical bugs. If any are found, we fix them in the release branch and create a new release with a minor version bump, e.g., 3.5.1 in the `release/3.5` branch.
@@ -127,10 +336,6 @@ Each package is tagged with version numbers and published to npm, such as `@ohif
 Here is a schematic representation of our development workflow:
 
 ![alt text](platform/docs/docs/assets/img/github-readme-branches-Jun2024.png)
-
-
-
-
 
 ### Requirements
 
@@ -238,7 +443,7 @@ To acknowledge the OHIF Viewer in an academic publication, please cite
 > [10.1200/CCI.19.00131](https://www.doi.org/10.1200/CCI.19.00131)
 >
 > Open-Access on Pubmed Central:
-> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7259879/
+> <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7259879/>
 
 or, for v1, please cite:
 
@@ -276,61 +481,19 @@ MIT © [OHIF](https://github.com/OHIF)
 
 <!-- prettier-ignore-start -->
 <!-- Badges -->
-[lerna-image]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
-[lerna-url]: https://lerna.js.org/
-[netlify-image]: https://api.netlify.com/api/v1/badges/32708787-c9b0-4634-b50f-7ca41952da77/deploy-status
-[netlify-url]: https://app.netlify.com/sites/ohif-dev/deploys
-[all-contributors-image]: https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square
-[circleci-image]: https://circleci.com/gh/OHIF/Viewers.svg?style=svg
-[circleci-url]: https://circleci.com/gh/OHIF/Viewers
-[codecov-image]: https://codecov.io/gh/OHIF/Viewers/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/OHIF/Viewers/branch/master
-[prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square
-[prettier-url]: https://github.com/prettier/prettier
-[semantic-image]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-url]: https://github.com/semantic-release/semantic-release
 <!-- ROW -->
 [npm-url]: https://npmjs.org/package/@ohif/app
-[npm-downloads-image]: https://img.shields.io/npm/dm/@ohif/app.svg?style=flat-square
 [npm-version-image]: https://img.shields.io/npm/v/@ohif/app.svg?style=flat-square
-[docker-pulls-img]: https://img.shields.io/docker/pulls/ohif/viewer.svg?style=flat-square
-[docker-image-url]: https://hub.docker.com/r/ohif/app
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: LICENSE
 [percy-image]: https://percy.io/static/images/percy-badge.svg
-[percy-url]: https://percy.io/Open-Health-Imaging-Foundation/OHIF-Viewer
 <!-- Links -->
 [monorepo]: https://en.wikipedia.org/wiki/Monorepo
 [how-to-fork]: https://help.github.com/en/articles/fork-a-repo
 [how-to-clone]: https://help.github.com/en/articles/fork-a-repo#step-2-create-a-local-clone-of-your-fork
-[ohif-architecture]: https://docs.ohif.org/architecture/index.html
-[ohif-extensions]: https://docs.ohif.org/architecture/index.html
 [deployment-docs]: https://docs.ohif.org/deployment/
-[react-url]: https://reactjs.org/
-[pwa-url]: https://developers.google.com/web/progressive-web-apps/
-[ohif-viewer-url]: https://www.npmjs.com/package/@ohif/app
-[configuration-url]: https://docs.ohif.org/configuring/
-[extensions-url]: https://docs.ohif.org/extensions/
 <!-- Platform -->
-[platform-core]: platform/core/README.md
-[core-npm]: https://www.npmjs.com/package/@ohif/core
-[platform-i18n]: platform/i18n/README.md
-[i18n-npm]: https://www.npmjs.com/package/@ohif/i18n
-[platform-ui]: platform/ui/README.md
-[ui-npm]: https://www.npmjs.com/package/@ohif/ui
-[platform-viewer]: platform/app/README.md
-[viewer-npm]: https://www.npmjs.com/package/@ohif/app
 <!-- Extensions -->
-[extension-cornerstone]: extensions/cornerstone/README.md
-[cornerstone-npm]: https://www.npmjs.com/package/@ohif/extension-cornerstone
-[extension-dicom-html]: extensions/dicom-html/README.md
-[html-npm]: https://www.npmjs.com/package/@ohif/extension-dicom-html
-[extension-dicom-microscopy]: extensions/dicom-microscopy/README.md
-[microscopy-npm]: https://www.npmjs.com/package/@ohif/extension-dicom-microscopy
-[extension-dicom-pdf]: extensions/dicom-pdf/README.md
-[pdf-npm]: https://www.npmjs.com/package/@ohif/extension-dicom-pdf
-[extension-vtk]: extensions/vtk/README.md
-[vtk-npm]: https://www.npmjs.com/package/@ohif/extension-vtk
 <!-- prettier-ignore-end -->
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FOHIF%2FViewers.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FOHIF%2FViewers?ref=badge_large&issueType=license)
