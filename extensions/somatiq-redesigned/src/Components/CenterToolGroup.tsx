@@ -10,6 +10,14 @@ import panIcon from '../../assets/pan.png';
 import windowLevelIcon from '../../assets/windowLevel.png';
 import captureIcon from '../../assets/capture.png';
 import flipHorizontalIcon from '../../assets/flipHorizontal.png';
+// Import additional tool icons (Tools 7-12)
+import changeLayoutIcon from '../../assets/changeLayout.png';
+import imageSyncIcon from '../../assets/ImageSliceSync.png';
+import imageSynccIcon from '../../assets/slicee.png';
+import invertIcon from '../../assets/Invert.png';
+import angleIcon from '../../assets/Angle.png';
+import threeDIcon from '../../assets/3D.png';
+import dicomTagBrowserIcon from '../../assets/DicomTagBrowser.png';
 
 /**
  * CenterToolGroup - Main center tool group with actual tool icons
@@ -24,9 +32,9 @@ function CenterToolGroup() {
 
   // Helper function to check if a tool is active
   const isToolActive = (toolName: string): boolean => {
-    const toolButton = toolbarButtons.find(button => 
-      button.id === toolName || 
-      (button.componentProps && button.componentProps.id === toolName)
+    const toolButton = toolbarButtons.find(
+      button =>
+        button.id === toolName || (button.componentProps && button.componentProps.id === toolName)
     );
     return toolButton?.componentProps?.isActive || false;
   };
@@ -122,7 +130,19 @@ function CenterToolGroup() {
         />
       </ToolButton>
 
-      {/* Tool 6 - Flip Horizontal Tool */}
+      {/* Tool 6 - Change Layout */}
+      <ToolButton
+        onClick={() => handleToolClick(7)}
+        title="Change Layout"
+      >
+        <img
+          src={changeLayoutIcon}
+          alt="Change Layout"
+          className="h-6 w-6"
+        />
+      </ToolButton>
+
+      {/* Tool 7 - Flip Horizontal Tool */}
       <ToolButton
         onClick={handleFlipHorizontal}
         title="Flip Horizontal Tool"
@@ -135,64 +155,64 @@ function CenterToolGroup() {
         />
       </ToolButton>
 
-      {/* Tool 7 - Placeholder */}
-      <ToolButton
-        onClick={() => handleToolClick(7)}
-        title="Tool 7 - Please specify icon/function"
-      >
-        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
-          7
-        </div>
-      </ToolButton>
-
-      {/* Tool 8 - Placeholder */}
+      {/* Tool 8 - Image Slice Sync */}
       <ToolButton
         onClick={() => handleToolClick(8)}
-        title="Tool 8 - Please specify icon/function"
+        title="Image Slice Sync"
       >
-        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
-          8
-        </div>
+        <img
+          src={imageSynccIcon}
+          alt="Image Slice Sync"
+          className="h-5 w-5"
+        />
       </ToolButton>
 
-      {/* Tool 9 - Placeholder */}
+      {/* Tool 9 - Invert */}
       <ToolButton
         onClick={() => handleToolClick(9)}
-        title="Tool 9 - Please specify icon/function"
+        title="Invert Colors"
       >
-        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
-          9
-        </div>
+        <img
+          src={invertIcon}
+          alt="Invert Colors"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 10 - Placeholder */}
+      {/* Tool 10 - Angle */}
       <ToolButton
         onClick={() => handleToolClick(10)}
-        title="Tool 10 - Please specify icon/function"
+        title="Angle Tool"
       >
-        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
-          10
-        </div>
+        <img
+          src={angleIcon}
+          alt="Angle Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 11 - Placeholder */}
+      {/* Tool 11 - 3D */}
       <ToolButton
         onClick={() => handleToolClick(11)}
-        title="Tool 11 - Please specify icon/function"
+        title="3D View"
       >
-        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
-          11
-        </div>
+        <img
+          src={threeDIcon}
+          alt="3D View"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 12 - Placeholder */}
+      {/* Tool 12 - DICOM Tag Browser */}
       <ToolButton
         onClick={() => handleToolClick(12)}
-        title="Tool 12 - Please specify icon/function"
+        title="DICOM Tag Browser"
       >
-        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
-          12
-        </div>
+        <img
+          src={dicomTagBrowserIcon}
+          alt="DICOM Tag Browser"
+          className="h-6 w-6"
+        />
       </ToolButton>
     </ToolGroup>
   );
