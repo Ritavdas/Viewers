@@ -9,19 +9,13 @@ import SomatiqSidePanelWithServices from '../Components/SomatiqSidePanelWithServ
 import { Onboarding, ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@ohif/ui-next';
 import useResizablePanels from './useResizablePanels';
 
-// Glass morphism styling for resizable handles
-const resizableHandleClassName =
-  'mt-[1px] bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm border-white/10';
+const resizableHandleClassName = 'mt-[1px] bg-black';
 
 /**
- * SomatiqViewerLayout - Redesigned viewer layout with glass morphism effects
+ * SomatiqViewerLayout - Clean viewer layout based on original OHIF design
  *
- * This component provides a modern, dark-themed layout with glass morphism effects
- * while maintaining all existing OHIF functionality. Features include:
- * - Glass morphism design with backdrop blur effects
- * - Modern dark theme with subtle gradients
- * - Enhanced visual hierarchy and spacing
- * - Responsive design for different screen sizes
+ * This component provides the standard OHIF layout functionality
+ * ready for customization as needed for the assignment.
  */
 function SomatiqViewerLayout({
   // From Extension Module Params
@@ -47,7 +41,7 @@ function SomatiqViewerLayout({
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(appConfig.showLoadingIndicator);
 
   const hasPanels = useCallback(
-    (side: string): boolean => !!panelService.getPanels(side).length,
+    (side) => !!panelService.getPanels(side).length,
     [panelService]
   );
 
@@ -78,7 +72,7 @@ function SomatiqViewerLayout({
   );
 
   const handleMouseEnter = () => {
-    (document.activeElement as HTMLElement)?.blur();
+    (document.activeElement)?.blur();
   };
 
   const LoadingIndicatorProgress = customizationService.getCustomization(
@@ -86,23 +80,21 @@ function SomatiqViewerLayout({
   );
 
   /**
-   * Set body classes for the redesigned dark theme with glass morphism
+   * Set body classes (tailwindcss) that don't allow vertical
+   * or horizontal overflow (no scrolling). Also guarantee window
+   * is sized to our viewport.
    */
   useEffect(() => {
     document.body.classList.add('bg-black');
     document.body.classList.add('overflow-hidden');
-    // Add custom glass morphism background
-    document.body.style.background =
-      'linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%)';
 
     return () => {
       document.body.classList.remove('bg-black');
       document.body.classList.remove('overflow-hidden');
-      document.body.style.background = '';
     };
   }, []);
 
-  const getComponent = (id: string) => {
+  const getComponent = id => {
     const entry = extensionManager.getModuleEntry(id);
 
     if (!entry || !entry.component) {
@@ -127,7 +119,7 @@ function SomatiqViewerLayout({
     };
   }, [hangingProtocolService]);
 
-  const getViewportComponentData = (viewportComponent: any) => {
+  const getViewportComponentData = viewportComponent => {
     const { entry } = getComponent(viewportComponent.namespace);
 
     return {
@@ -160,44 +152,30 @@ function SomatiqViewerLayout({
   const viewportComponents = viewports.map(getViewportComponentData);
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Redesigned Header with Glass Morphism */}
+    <div>
       <SomatiqViewerHeader
         hotkeysManager={hotkeysManager}
         extensionManager={extensionManager}
         servicesManager={servicesManager}
         appConfig={appConfig}
       />
-
-      {/* Main Content Area with Glass Morphism Background */}
       <div
-        className="relative flex w-full flex-row flex-nowrap items-stretch overflow-hidden"
-        style={{
-          height: 'calc(100vh - 64px)', // Adjusted for redesigned header height
-          background:
-            'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.8) 100%)',
-        }}
+        className="relative flex w-full flex-row flex-nowrap items-stretch overflow-hidden bg-black"
+        style={{ height: 'calc(100vh - 52px' }}
       >
         <React.Fragment>
-          {showLoadingIndicator && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-              <LoadingIndicatorProgress className="h-full w-full" />
-            </div>
-          )}
-
+          {showLoadingIndicator && <LoadingIndicatorProgress className="h-full w-full bg-black" />}
           <ResizablePanelGroup {...resizablePanelGroupProps}>
-            {/* LEFT SIDEPANELS with Glass Morphism */}
+            {/* LEFT SIDEPANELS */}
             {hasLeftPanels ? (
               <>
                 <ResizablePanel {...resizableLeftPanelProps}>
-                  <div className="to-white/2 h-full border-r border-white/10 bg-gradient-to-b from-white/5 backdrop-blur-md">
-                    <SomatiqSidePanelWithServices
-                      side="left"
-                      isExpanded={!leftPanelClosedState}
-                      servicesManager={servicesManager}
-                      {...leftPanelProps}
-                    />
-                  </div>
+                  <SomatiqSidePanelWithServices
+                    side="left"
+                    isExpanded={!leftPanelClosedState}
+                    servicesManager={servicesManager}
+                    {...leftPanelProps}
+                  />
                 </ResizablePanel>
                 <ResizableHandle
                   onDragging={onHandleDragging}
@@ -206,12 +184,11 @@ function SomatiqViewerLayout({
                 />
               </>
             ) : null}
-
-            {/* MAIN VIEWPORT AREA with Enhanced Styling */}
+            {/* TOOLBAR + GRID */}
             <ResizablePanel {...resizableViewportGridPanelProps}>
               <div className="flex h-full flex-1 flex-col">
                 <div
-                  className="relative flex h-full flex-1 items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900/20 to-black/40"
+                  className="relative flex h-full flex-1 items-center justify-center overflow-hidden bg-black"
                   onMouseEnter={handleMouseEnter}
                 >
                   <ViewportGridComp
@@ -222,8 +199,6 @@ function SomatiqViewerLayout({
                 </div>
               </div>
             </ResizablePanel>
-
-            {/* RIGHT SIDEPANELS with Glass Morphism */}
             {hasRightPanels ? (
               <>
                 <ResizableHandle
@@ -232,22 +207,18 @@ function SomatiqViewerLayout({
                   className={resizableHandleClassName}
                 />
                 <ResizablePanel {...resizableRightPanelProps}>
-                  <div className="to-white/2 h-full border-l border-white/10 bg-gradient-to-b from-white/5 backdrop-blur-md">
-                    <SomatiqSidePanelWithServices
-                      side="right"
-                      isExpanded={!rightPanelClosedState}
-                      servicesManager={servicesManager}
-                      {...rightPanelProps}
-                    />
-                  </div>
+                  <SomatiqSidePanelWithServices
+                    side="right"
+                    isExpanded={!rightPanelClosedState}
+                    servicesManager={servicesManager}
+                    {...rightPanelProps}
+                  />
                 </ResizablePanel>
               </>
             ) : null}
           </ResizablePanelGroup>
         </React.Fragment>
       </div>
-
-      {/* Onboarding and Dialogs */}
       <Onboarding tours={customizationService.getCustomization('ohif.tours')} />
       <InvestigationalUseDialog dialogConfiguration={appConfig?.investigationalUseDialog} />
     </div>
