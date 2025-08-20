@@ -1,91 +1,129 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Header } from '@ohif/ui-next';
-import { Types } from '@ohif/ui';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-const PatientInfoVisibility = Types.PatientInfoVisibility;
+import { Button, Header, Icons, useModal } from '@ohif/ui-next';
+import { useSystem } from '@ohif/core';
+import { Toolbar } from '@ohif/extension-default/src/Toolbar/Toolbar';
+import HeaderPatientInfo from '@ohif/extension-default/src/ViewerLayout/HeaderPatientInfo';
+import { PatientInfoVisibility } from '@ohif/extension-default/src/ViewerLayout/HeaderPatientInfo/HeaderPatientInfo';
+import { preserveQueryParameters } from '@ohif/app';
+import { Types } from '@ohif/core';
 
-/**
- * SomatiqViewerHeader - Redesigned header component with glass morphism effects
- * 
- * This component provides a modern, glass morphism header for the redesigned OHIF viewer.
- * Features include:
- * - Glass morphism background with backdrop blur
- * - Enhanced visual hierarchy
- * - Modern dark theme styling
- * - Preserved functionality from original header
- */
-function SomatiqViewerHeader({
-  hotkeysManager,
-  extensionManager,
-  servicesManager,
-  appConfig,
-}) {
+function SomatiqViewerHeader({ appConfig }) {
+  const { servicesManager, extensionManager, commandsManager } = useSystem();
   const { customizationService } = servicesManager.services;
 
-  // Get menu options from customization service
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const onClickReturnButton = () => {
+    const { pathname } = location;
+    const dataSourceIdx = pathname.indexOf('/', 1);
+
+    const dataSourceName = pathname.substring(dataSourceIdx + 1);
+    const existingDataSource = extensionManager.getDataSources(dataSourceName);
+
+    const searchQuery = new URLSearchParams();
+    if (dataSourceIdx !== -1 && existingDataSource) {
+      searchQuery.append('datasources', pathname.substring(dataSourceIdx + 1));
+    }
+    preserveQueryParameters(searchQuery);
+
+    navigate({
+      pathname: '/',
+      search: decodeURIComponent(searchQuery.toString()),
+    });
+  };
+
+  const { t } = useTranslation();
+  const { show } = useModal();
+
   const AboutModal = customizationService.getCustomization(
     'ohif.aboutModal'
-  );
+  ) as Types.MenuComponentCustomization;
+
   const UserPreferencesModal = customizationService.getCustomization(
     'ohif.userPreferencesModal'
-  );
+  ) as Types.MenuComponentCustomization;
 
   const menuOptions = [
     {
-      title: AboutModal?.menuTitle ?? 'About',
+      title: AboutModal?.menuTitle ?? t('Header:About'),
       icon: 'info',
-      onClick: () => {
-        // Handle about modal
-      },
+      onClick: () =>
+        show({
+          content: AboutModal,
+          title: AboutModal?.title ?? t('AboutModal:About OHIF Viewer'),
+          containerClassName: AboutModal?.containerClassName ?? 'max-w-md',
+        }),
     },
     {
-      title: UserPreferencesModal?.menuTitle ?? 'Preferences',
+      title: UserPreferencesModal.menuTitle ?? t('Header:Preferences'),
       icon: 'settings',
-      onClick: () => {
-        // Handle preferences modal
-      },
+      onClick: () =>
+        show({
+          content: UserPreferencesModal,
+          title: UserPreferencesModal.title ?? t('UserPreferencesModal:User preferences'),
+          containerClassName:
+            UserPreferencesModal?.containerClassName ?? 'flex max-w-4xl p-6 flex-col',
+        }),
     },
   ];
 
   if (appConfig.oidc) {
     menuOptions.push({
+      title: t('Header:Logout'),
       icon: 'power-off',
-      title: 'Logout',
-      onClick: () => {
-        // Handle logout
+      onClick: async () => {
+        navigate(`/logout?redirect_uri=${encodeURIComponent(window.location.href)}`);
       },
     });
   }
 
   return (
-    <div className="relative">
-      {/* Glass Morphism Background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-gray-900/60 to-black/80 backdrop-blur-md border-b border-white/10" />
-      
-      {/* Header Content */}
-      <div className="relative z-10">
-        <Header
-          isSticky={false}
-          menuOptions={menuOptions}
-          isReturnEnabled={false}
-          WhiteLabeling={appConfig.whiteLabeling}
-          showPatientInfo={PatientInfoVisibility.DISABLED}
-          className="bg-transparent border-none"
-        />
+    <Header
+      menuOptions={menuOptions}
+      isReturnEnabled={!!appConfig.showStudyList}
+      onClickReturnButton={onClickReturnButton}
+      WhiteLabeling={appConfig.whiteLabeling}
+      Secondary={<Toolbar buttonSection="secondary" />}
+      PatientInfo={
+        appConfig.showPatientInfo !== PatientInfoVisibility.DISABLED && (
+          <HeaderPatientInfo
+            servicesManager={servicesManager}
+            appConfig={appConfig}
+          />
+        )
+      }
+      UndoRedo={
+        <div className="text-primary flex cursor-pointer items-center">
+          <Button
+            variant="ghost"
+            className="hover:bg-primary-dark"
+            onClick={() => {
+              commandsManager.run('undo');
+            }}
+          >
+            <Icons.Undo className="" />
+          </Button>
+          <Button
+            variant="ghost"
+            className="hover:bg-primary-dark"
+            onClick={() => {
+              commandsManager.run('redo');
+            }}
+          >
+            <Icons.Redo className="" />
+          </Button>
+        </div>
+      }
+    >
+      <div className="relative flex justify-center gap-[4px]">
+        <Toolbar buttonSection="primary" />
       </div>
-      
-      {/* Subtle glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-    </div>
+    </Header>
   );
 }
-
-SomatiqViewerHeader.propTypes = {
-  hotkeysManager: PropTypes.object,
-  extensionManager: PropTypes.object.isRequired,
-  servicesManager: PropTypes.object.isRequired,
-  appConfig: PropTypes.object.isRequired,
-};
 
 export default SomatiqViewerHeader;
