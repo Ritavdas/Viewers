@@ -6,6 +6,7 @@ import ToolButton from './ToolButton';
 
 // Import measurement tool icons
 import lengthIcon from '../../assets/length.png';
+import rectangleIndicator from '../../assets/rectangle.png';
 
 /**
  * MeasurementToolsDropdown - Dropdown with all measurement tools like original OHIF header
@@ -225,18 +226,12 @@ function MeasurementToolsDropdown() {
           )}
 
           {/* Subtle visual hint for dropdown area */}
-          <div className="absolute bottom-0 right-0 h-1.5 w-1.5 opacity-30">
-            <svg
-              className={`h-1.5 w-1.5 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <div className="absolute bottom-0 right-0 h-1.5 w-1.5">
+            <img
+              src={rectangleIndicator}
+              alt="dropdown indicator"
+              className={`h-1.5 w-1.5 transform transition-transform ${isDropdownOpen ? '' : ''}`}
+            />
           </div>
         </ToolButton>
       </div>
@@ -260,8 +255,8 @@ function MeasurementToolsDropdown() {
                   className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-white transition-colors hover:bg-white/10"
                   title={tool.tooltip}
                 >
-                  {/* Tool Icon */}
-                  <div className="flex h-6 w-6 items-center justify-center">
+                  {/* Tool Icon with dropdown indicator */}
+                  <div className="relative flex h-6 w-6 items-center justify-center">
                     {tool.customIcon ? (
                       <img
                         src={tool.customIcon}
@@ -275,10 +270,8 @@ function MeasurementToolsDropdown() {
                       />
                     )}
                   </div>
-
                   {/* Tool Label */}
                   <span>{tool.label}</span>
-
                   {/* Active Indicator */}
                   {activeTool.id === tool.id && (
                     <div className="ml-auto h-2 w-2 rounded-full bg-blue-400" />
