@@ -551,7 +551,7 @@ const toolbarButtons: Button[] = [
     uiType: 'ohif.toolButton',
     props: {
       icon: 'icon-tool-livewire',
-      label: 'Livewire tool',
+      label: 'Livewire tool xx2',
       tooltip: 'Livewire tool',
       commands: setToolActiveToolbar,
       evaluate: 'evaluate.cornerstoneTool',

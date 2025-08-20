@@ -2,10 +2,9 @@ import React from 'react';
 import { useSystem, useToolbar } from '@ohif/core';
 import ToolGroup from './ToolGroup';
 import ToolButton from './ToolButton';
+import MeasurementToolsDropdown from './MeasurementToolsDropdown';
 
 // Import tool icons
-import lengthIcon from '../../assets/length.png';
-// import lengthIcon from '../assets/length.png';
 import zoomIcon from '../../assets/zoom.png';
 import panIcon from '../../assets/pan.png';
 import windowLevelIcon from '../../assets/windowLevel.png';
@@ -46,10 +45,6 @@ function CenterToolGroup() {
   };
 
   // Tool functionality handlers
-  const handleLengthTool = () => {
-    commandsManager.run(setToolActiveToolbar, { toolName: 'Length' });
-  };
-
   const handleZoomTool = () => {
     commandsManager.run(setToolActiveToolbar, { toolName: 'Zoom' });
   };
@@ -72,18 +67,8 @@ function CenterToolGroup() {
 
   return (
     <ToolGroup>
-      {/* Tool 1 - Length Tool */}
-      <ToolButton
-        onClick={handleLengthTool}
-        title="Length Tool"
-        active={isToolActive('Length')}
-      >
-        <img
-          src={lengthIcon}
-          alt="Length Tool"
-          className="h-6 w-6"
-        />
-      </ToolButton>
+      {/* Tool 1 - Measurement Tools Dropdown */}
+      <MeasurementToolsDropdown />
 
       {/* Tool 2 - Zoom Tool */}
       <ToolButton
