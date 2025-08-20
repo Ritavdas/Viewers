@@ -7,7 +7,7 @@ import { preserveQueryParameters } from '@ohif/app';
 import { Types } from '@ohif/core';
 
 // Import the logo asset
-import somatiqLogo from './SOMATIQ.png';
+import somatiqLogo from '../../assets/SOMATIQ.png';
 // Import tool group components
 import CenterToolGroup from './CenterToolGroup';
 

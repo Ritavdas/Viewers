@@ -1,81 +1,153 @@
 import React from 'react';
+import { useSystem, useToolbar } from '@ohif/core';
 import ToolGroup from './ToolGroup';
 import ToolButton from './ToolButton';
 
+// Import tool icons
+import lengthIcon from '../../assets/length.png';
+// import lengthIcon from '../assets/length.png';
+import zoomIcon from '../../assets/zoom.png';
+import panIcon from '../../assets/pan.png';
+import windowLevelIcon from '../../assets/windowLevel.png';
+import captureIcon from '../../assets/capture.png';
+import flipHorizontalIcon from '../../assets/flipHorizontal.png';
+
 /**
- * CenterToolGroup - Main center tool group with placeholder icons
- * 
+ * CenterToolGroup - Main center tool group with actual tool icons
+ *
  * This component implements the center tool group from Figma with 12 tools.
- * Each tool has a numbered placeholder icon so you can tell me which 
- * specific icons/functions should go where.
+ * First 6 tools now have actual icons, remaining 6 have placeholders.
  */
 
 function CenterToolGroup() {
-  // Placeholder click handlers - will replace with real OHIF commands later
+  const { commandsManager } = useSystem();
+  const { toolbarButtons, onInteraction } = useToolbar({ buttonSection: 'primary' });
+
+  // Helper function to check if a tool is active
+  const isToolActive = (toolName: string): boolean => {
+    const toolButton = toolbarButtons.find(button => 
+      button.id === toolName || 
+      (button.componentProps && button.componentProps.id === toolName)
+    );
+    return toolButton?.componentProps?.isActive || false;
+  };
+
+  // Placeholder click handlers for tools 7-12
   const handleToolClick = (toolNumber: number) => {
     console.log(`Tool ${toolNumber} clicked`);
   };
 
+  // OHIF tool command configurations
+  const setToolActiveToolbar = {
+    commandName: 'setToolActiveToolbar',
+    commandOptions: {
+      toolGroupIds: ['default', 'mpr', 'SRToolGroup', 'volume3d'],
+    },
+  };
+
+  // Tool functionality handlers
+  const handleLengthTool = () => {
+    commandsManager.run(setToolActiveToolbar, { toolName: 'Length' });
+  };
+
+  const handleZoomTool = () => {
+    commandsManager.run(setToolActiveToolbar, { toolName: 'Zoom' });
+  };
+
+  const handlePanTool = () => {
+    commandsManager.run(setToolActiveToolbar, { toolName: 'Pan' });
+  };
+
+  const handleWindowLevelTool = () => {
+    commandsManager.run(setToolActiveToolbar, { toolName: 'WindowLevel' });
+  };
+
+  const handleCaptureTool = () => {
+    commandsManager.run('showDownloadViewportModal');
+  };
+
+  const handleFlipHorizontal = () => {
+    commandsManager.run('flipViewportHorizontal');
+  };
+
   return (
     <ToolGroup>
-      {/* Tool 1 - Placeholder */}
+      {/* Tool 1 - Length Tool */}
       <ToolButton
-        onClick={() => handleToolClick(1)}
-        title="Tool 1 - Please specify icon/function"
+        onClick={handleLengthTool}
+        title="Length Tool"
+        active={isToolActive('Length')}
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
-          1
-        </div>
+        <img
+          src={lengthIcon}
+          alt="Length Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 2 - Placeholder */}
+      {/* Tool 2 - Zoom Tool */}
       <ToolButton
-        onClick={() => handleToolClick(2)}
-        title="Tool 2 - Please specify icon/function"
+        onClick={handleZoomTool}
+        title="Zoom Tool"
+        active={isToolActive('Zoom')}
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
-          2
-        </div>
+        <img
+          src={zoomIcon}
+          alt="Zoom Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 3 - Placeholder */}
+      {/* Tool 3 - Pan Tool */}
       <ToolButton
-        onClick={() => handleToolClick(3)}
-        title="Tool 3 - Please specify icon/function"
+        onClick={handlePanTool}
+        title="Pan Tool"
+        active={isToolActive('Pan')}
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
-          3
-        </div>
+        <img
+          src={panIcon}
+          alt="Pan Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 4 - Placeholder */}
+      {/* Tool 4 - Window Level Tool */}
       <ToolButton
-        onClick={() => handleToolClick(4)}
-        title="Tool 4 - Please specify icon/function"
+        onClick={handleWindowLevelTool}
+        title="Window Level Tool"
+        active={isToolActive('WindowLevel')}
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
-          4
-        </div>
+        <img
+          src={windowLevelIcon}
+          alt="Window Level Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 5 - Placeholder */}
+      {/* Tool 5 - Capture Tool */}
       <ToolButton
-        onClick={() => handleToolClick(5)}
-        title="Tool 5 - Please specify icon/function"
+        onClick={handleCaptureTool}
+        title="Capture Tool"
+        active={false}
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
-          5
-        </div>
+        <img
+          src={captureIcon}
+          alt="Capture Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
-      {/* Tool 6 - Placeholder */}
+      {/* Tool 6 - Flip Horizontal Tool */}
       <ToolButton
-        onClick={() => handleToolClick(6)}
-        title="Tool 6 - Please specify icon/function"
+        onClick={handleFlipHorizontal}
+        title="Flip Horizontal Tool"
+        active={false}
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
-          6
-        </div>
+        <img
+          src={flipHorizontalIcon}
+          alt="Flip Horizontal Tool"
+          className="h-6 w-6"
+        />
       </ToolButton>
 
       {/* Tool 7 - Placeholder */}
@@ -83,7 +155,7 @@ function CenterToolGroup() {
         onClick={() => handleToolClick(7)}
         title="Tool 7 - Please specify icon/function"
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
+        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
           7
         </div>
       </ToolButton>
@@ -93,7 +165,7 @@ function CenterToolGroup() {
         onClick={() => handleToolClick(8)}
         title="Tool 8 - Please specify icon/function"
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
+        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
           8
         </div>
       </ToolButton>
@@ -103,7 +175,7 @@ function CenterToolGroup() {
         onClick={() => handleToolClick(9)}
         title="Tool 9 - Please specify icon/function"
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
+        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
           9
         </div>
       </ToolButton>
@@ -113,7 +185,7 @@ function CenterToolGroup() {
         onClick={() => handleToolClick(10)}
         title="Tool 10 - Please specify icon/function"
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
+        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
           10
         </div>
       </ToolButton>
@@ -123,7 +195,7 @@ function CenterToolGroup() {
         onClick={() => handleToolClick(11)}
         title="Tool 11 - Please specify icon/function"
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
+        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
           11
         </div>
       </ToolButton>
@@ -133,7 +205,7 @@ function CenterToolGroup() {
         onClick={() => handleToolClick(12)}
         title="Tool 12 - Please specify icon/function"
       >
-        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center text-black text-xs font-bold">
+        <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-white text-xs font-bold text-black">
           12
         </div>
       </ToolButton>

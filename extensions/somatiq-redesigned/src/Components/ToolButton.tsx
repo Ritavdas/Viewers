@@ -43,8 +43,15 @@ function ToolButton({
         'hover:text-white/80',
         'active:scale-95',
         
-        // Active state
-        active && 'text-blue-400',
+        // Active state with glass morphism effect
+        active && [
+          'text-blue-400',
+          'bg-blue-500/20',
+          'border border-blue-400/30',
+          'rounded-md',
+          'shadow-lg',
+          'backdrop-blur-sm'
+        ],
         
         // Remove default button styles
         'bg-transparent border-none p-0 outline-none',
