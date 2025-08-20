@@ -3,6 +3,7 @@ import { useSystem, useToolbar } from '@ohif/core';
 import ToolGroup from './ToolGroup';
 import ToolButton from './ToolButton';
 import MeasurementToolsDropdown from './MeasurementToolsDropdown';
+import LayoutDropdown from './LayoutDropdown';
 
 // Import tool icons
 import zoomIcon from '../../assets/zoom.png';
@@ -45,10 +46,7 @@ function CenterToolGroup() {
   };
 
   // Tool functionality handlers for tools 7-12
-  const handleChangeLayout = () => {
-    // Layout selector - this might need special handling as it's ohif.layoutSelector
-    console.log('Change Layout clicked - may need special implementation');
-  };
+  // Layout dropdown handles its own functionality
 
   const handleImageSliceSync = () => {
     commandsManager.run({
@@ -162,16 +160,7 @@ function CenterToolGroup() {
       </ToolButton>
 
       {/* Tool 6 - Change Layout */}
-      <ToolButton
-        onClick={handleChangeLayout}
-        title="Change Layout"
-      >
-        <img
-          src={changeLayoutIcon}
-          alt="Change Layout"
-          className="h-6 w-6"
-        />
-      </ToolButton>
+      <LayoutDropdown />
 
       {/* Tool 7 - Flip Horizontal Tool */}
       <ToolButton
