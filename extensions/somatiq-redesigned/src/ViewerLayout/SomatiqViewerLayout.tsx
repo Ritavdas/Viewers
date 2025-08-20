@@ -40,10 +40,7 @@ function SomatiqViewerLayout({
   const { panelService, hangingProtocolService, customizationService } = servicesManager.services;
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(appConfig.showLoadingIndicator);
 
-  const hasPanels = useCallback(
-    (side) => !!panelService.getPanels(side).length,
-    [panelService]
-  );
+  const hasPanels = useCallback(side => !!panelService.getPanels(side).length, [panelService]);
 
   const [hasRightPanels, setHasRightPanels] = useState(hasPanels('right'));
   const [hasLeftPanels, setHasLeftPanels] = useState(hasPanels('left'));
@@ -72,7 +69,7 @@ function SomatiqViewerLayout({
   );
 
   const handleMouseEnter = () => {
-    (document.activeElement)?.blur();
+    document.activeElement?.blur();
   };
 
   const LoadingIndicatorProgress = customizationService.getCustomization(
