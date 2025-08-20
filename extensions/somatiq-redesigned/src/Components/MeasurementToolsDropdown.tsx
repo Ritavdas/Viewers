@@ -78,27 +78,46 @@ const measurementTools = [
 function MeasurementToolsDropdown() {
   const { commandsManager } = useSystem();
   const { toolbarButtons, onInteraction } = useToolbar({ buttonSection: 'primary' });
+
+  // Let's also try getting MeasurementTools section specifically
+  const { toolbarButtons: measurementToolbarButtons } = useToolbar({
+    buttonSection: 'MeasurementTools',
+  });
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Find active measurement tool or default to Length
+  // Find active measurement tool or default to Length (matches OHIF ToolButtonListWrapper logic)
   const getActiveTool = () => {
-    const activeTool = measurementTools.find(tool => {
-      const toolButton = toolbarButtons.find(
-        button =>
-          button.id === tool.id || (button.componentProps && button.componentProps.id === tool.id)
-      );
+    // Debug: Let's see what's in both sections
+
+    // First, check if any measurement tool is currently active in the MeasurementTools section
+    const activeMeasurementTool = measurementTools.find(tool => {
+      const toolButton = measurementToolbarButtons.find(button => {
+        const match =
+          button.id === tool.id || (button.componentProps && button.componentProps.id === tool.id);
+        return match;
+      });
+
       return toolButton?.componentProps?.isActive;
     });
-    return activeTool || measurementTools[0]; // Default to Length
+
+    // If an active measurement tool is found, use it as primary
+
+    if (activeMeasurementTool) {
+      return activeMeasurementTool;
+    }
+
+    // Otherwise, default to Length (first tool in measurementTools array)
+    return measurementTools[0];
   };
 
   // Check if there's a truly active measurement tool (not just default)
   const getActiveToolState = () => {
     return measurementTools.find(tool => {
-      const toolButton = toolbarButtons.find(
+      const toolButton = measurementToolbarButtons.find(
         button =>
           button.id === tool.id || (button.componentProps && button.componentProps.id === tool.id)
       );
