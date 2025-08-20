@@ -88,7 +88,7 @@ function SomatiqHeader({ appConfig }) {
   }
 
   return (
-    <div className="my-2 flex h-12 items-center border-b border-gray-800 bg-black px-4">
+    <div className="my-2 flex h-12 items-center bg-black px-4">
       {/* Left side: Return button + Somatiq Logo */}
       <div className="flex items-center gap-3">
         {/* Return button (if enabled) */}

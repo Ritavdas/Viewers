@@ -24,7 +24,7 @@ function ToolGroup({ children, className }: ToolGroupProps) {
         // Base glass morphism styling from Figma
         'flex items-center',
         'bg-[#111111]',
-        'border-white/8 border',
+        '',
         'rounded-[20px]',
         'px-4 py-3', // 16px padding from Figma
         'h-[50px]', // Exact height from Figma
